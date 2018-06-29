@@ -13,11 +13,17 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class ArticleAdapter extends ArrayAdapter<Article> {
+
+    public static final String LOG_TAG = ArticleAdapter.class.getSimpleName();
     public ArticleAdapter(@NonNull Context context, @NonNull List<Article> objects) {
         super(context, 0, objects);
     }
@@ -43,7 +49,8 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
         articleDescription.setText(currentArticle.getDescription());
 
         TextView articleDate = convertView.findViewById(R.id.article_date);
-        articleDate.setText(currentArticle.getPublishedDate());
+
+        articleDate.setText(formatDate(fromISO8601UTC(currentArticle.getPublishedDate())));
 
         return convertView;
 
@@ -70,5 +77,23 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
         protected void onPostExecute(Bitmap result) {
             bmImage.setImageBitmap(result);
         }
+    }
+
+    private Date fromISO8601UTC(String dateStr) {
+        TimeZone tz = TimeZone.getTimeZone("UTC");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        df.setTimeZone(tz);
+
+        try {
+            return df.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private String formatDate(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM yyyy");
+        return dateFormat.format(date);
     }
 }
