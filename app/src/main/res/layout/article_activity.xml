@@ -8,8 +8,8 @@
         android:id="@+id/list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="@dimen/padding_8dp"
+        android:layout_marginBottom="@dimen/padding_8dp"
         tools:ignore="InvalidId">
     </ListView>
     <ImageView
@@ -21,15 +21,15 @@
         android:layout_alignParentBottom="true"/>
     <TextView
         android:id="@+id/message_view"
-        android:layout_width="120dp"
+        android:layout_width="@dimen/message_box_width"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="32dp"
-        android:layout_marginRight="32dp"
-        android:textSize="32dp"
+        android:layout_marginTop="@dimen/margin_32dp"
+        android:layout_marginRight="@dimen/margin_32dp"
+        android:textSize="@dimen/large_font"
         android:textStyle="italic"
         android:textAppearance="?android:textAppearanceMedium"
-        tools:text="No internet, pussy"/>
+        tools:text="@string/no_internet"/>
     <ProgressBar
         android:id="@+id/loading"
         style="@style/Widget.AppCompat.ProgressBar"

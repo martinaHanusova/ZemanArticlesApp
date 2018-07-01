@@ -4,15 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="8dp"
-    android:paddingTop="8dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp">
+    android:paddingBottom="@dimen/padding_8dp"
+    android:paddingTop="@dimen/padding_8dp"
+    android:paddingLeft="@dimen/padding_16dp"
+    android:paddingRight="@dimen/padding_16dp">
    <ImageView
        android:id="@+id/article_image"
-       android:layout_width="96dp"
-       android:layout_height="96dp"
-       android:layout_marginRight="16dp"
+       android:layout_width="@dimen/image_size"
+       android:layout_height="@dimen/image_size"
+       android:layout_marginRight="@dimen/padding_16dp"
        tools:src="@drawable/ic_launcher_background"/>
     <TextView
         android:id="@+id/article_date"

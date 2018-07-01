@@ -52,7 +52,7 @@ public class ArticlesActivity extends AppCompatActivity implements LoaderManager
             getLoaderManager().initLoader(ARTICLE_LOADER_ID, null, this);
         } else {
             progressBar.setVisibility(View.GONE);
-            messageView.setText("No internet, Pussy");
+            messageView.setText(R.string.no_internet);
             backgroundImage.setVisibility(View.VISIBLE);
         }
 
@@ -75,7 +75,7 @@ public class ArticlesActivity extends AppCompatActivity implements LoaderManager
 
     @Override
     public void onLoadFinished(Loader<List<Article>> loader, List<Article> data) {
-        messageView.setText("No articles, Pussy");
+        messageView.setText(R.string.no_articles);
         progressBar.setVisibility(View.GONE);
         articleAdapter.clear();
 
