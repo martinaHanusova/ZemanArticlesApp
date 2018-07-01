@@ -50,7 +50,6 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
         articleDescription.setText(currentArticle.getDescription());
 
         TextView articleDate = convertView.findViewById(R.id.article_date);
-
         articleDate.setText(currentArticle.getFormatedDate());
 
         return convertView;
@@ -70,33 +69,5 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
         }
 
         @Override public String key() { return "square()"; }
-    }
-
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-        ArticleAdapter adapter;
-        public DownloadImageTask(ArticleAdapter adapter, ImageView bmImage) {
-            this.bmImage = bmImage;
-            this.adapter = adapter;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            Log.i(LOG_TAG, "Start downloading");
-            String urldisplay = urls[0];
-            Bitmap bmp = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                bmp = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return bmp;
-        }
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-            //adapter.notifyDataSetChanged();
-            Log.i(LOG_TAG, "Setting image");
-        }
     }
 }
