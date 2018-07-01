@@ -1,6 +1,14 @@
 package com.example.android.newsapp;
 
-public class Article {
+import android.support.annotation.NonNull;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
+public class Article implements Comparable<Article>{
 
     private String title;
     private String description;
@@ -36,6 +44,25 @@ public class Article {
         return publishedDate;
     }
 
+    private Date fromISO8601UTC(String dateStr) {
+        TimeZone tz = TimeZone.getTimeZone("UTC");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        df.setTimeZone(tz);
+
+        try {
+            return df.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String getFormatedDate() {
+        Date date = fromISO8601UTC(publishedDate);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM yyyy");
+        return dateFormat.format(date);
+    }
+
     @Override
     public String toString() {
         return "Article{" +
@@ -45,5 +72,11 @@ public class Article {
                 ", imageUrl='" + imageUrl + '\'' +
                 ", publishedDate='" + publishedDate + '\'' +
                 '}';
+    }
+
+
+    @Override
+    public int compareTo(@NonNull Article o) {
+        return o.getPublishedDate().compareTo(getPublishedDate());
     }
 }

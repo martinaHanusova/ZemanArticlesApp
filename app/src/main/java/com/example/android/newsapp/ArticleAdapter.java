@@ -13,6 +13,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
+
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -38,8 +42,12 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
         }
 
         ImageView articleImage = convertView.findViewById(R.id.article_image);
-        if (currentArticle.getImageUrl() != null) {
-            new DownloadImageTask(articleImage).execute(currentArticle.getImageUrl());
+        String imageUrl = currentArticle.getImageUrl();
+
+        if (!imageUrl.equals("null")) {
+            Picasso.get().load(imageUrl).transform(new CropSquareTransformation()).into(articleImage);
+        } else {
+            articleImage.setVisibility(View.GONE);
         }
 
         TextView articleTitle = convertView.findViewById(R.id.article_title);
@@ -50,19 +58,37 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
 
         TextView articleDate = convertView.findViewById(R.id.article_date);
 
-        articleDate.setText(formatDate(fromISO8601UTC(currentArticle.getPublishedDate())));
+        articleDate.setText(currentArticle.getFormatedDate());
 
         return convertView;
 
     }
 
+    public class CropSquareTransformation implements Transformation {
+        @Override public Bitmap transform(Bitmap source) {
+            int size = Math.min(source.getWidth(), source.getHeight());
+            int x = (source.getWidth() - size) / 2;
+            int y = (source.getHeight() - size) / 2;
+            Bitmap result = Bitmap.createBitmap(source, x, y, size, size);
+            if (result != source) {
+                source.recycle();
+            }
+            return result;
+        }
+
+        @Override public String key() { return "square()"; }
+    }
+
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
-        public DownloadImageTask(ImageView bmImage) {
+        ArticleAdapter adapter;
+        public DownloadImageTask(ArticleAdapter adapter, ImageView bmImage) {
             this.bmImage = bmImage;
+            this.adapter = adapter;
         }
 
         protected Bitmap doInBackground(String... urls) {
+            Log.i(LOG_TAG, "Start downloading");
             String urldisplay = urls[0];
             Bitmap bmp = null;
             try {
@@ -76,24 +102,8 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
         }
         protected void onPostExecute(Bitmap result) {
             bmImage.setImageBitmap(result);
+            //adapter.notifyDataSetChanged();
+            Log.i(LOG_TAG, "Setting image");
         }
-    }
-
-    private Date fromISO8601UTC(String dateStr) {
-        TimeZone tz = TimeZone.getTimeZone("UTC");
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        df.setTimeZone(tz);
-
-        try {
-            return df.parse(dateStr);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private String formatDate(Date date) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM yyyy");
-        return dateFormat.format(date);
     }
 }

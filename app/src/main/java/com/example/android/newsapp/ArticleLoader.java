@@ -2,6 +2,7 @@ package com.example.android.newsapp;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
+import android.util.Log;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class ArticleLoader extends AsyncTaskLoader<List<Article>> {
         return QueryUtils.fetchArticleData(url);
     }
 
-    @Override
+   @Override
     protected void onStartLoading() {
         forceLoad();
     }
